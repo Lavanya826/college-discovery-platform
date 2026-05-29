@@ -1,0 +1,43 @@
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS "User" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "email" TEXT NOT NULL UNIQUE,
+  "passwordHash" TEXT NOT NULL,
+  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "College" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "city" TEXT NOT NULL,
+  "state" TEXT NOT NULL,
+  "type" TEXT NOT NULL,
+  "tuition" INTEGER NOT NULL,
+  "acceptanceRate" REAL NOT NULL,
+  "ranking" INTEGER,
+  "imageUrl" TEXT,
+  "website" TEXT,
+  "description" TEXT NOT NULL,
+  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS "Program" (
+  "id" TEXT NOT NULL PRIMARY KEY,
+  "name" TEXT NOT NULL,
+  "degree" TEXT NOT NULL,
+  "collegeId" TEXT NOT NULL,
+  CONSTRAINT "Program_collegeId_fkey" FOREIGN KEY ("collegeId") REFERENCES "College" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "SavedCollege" (
+  "userId" TEXT NOT NULL,
+  "collegeId" TEXT NOT NULL,
+  "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY ("userId", "collegeId"),
+  CONSTRAINT "SavedCollege_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "SavedCollege_collegeId_fkey" FOREIGN KEY ("collegeId") REFERENCES "College" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
